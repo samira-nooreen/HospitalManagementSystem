@@ -1,12 +1,12 @@
-# Step 1: Build the application using Maven
+# Build Stage
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Step 2: Run the application using JDK
+# Run Stage
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Use the PORT variable provided by Render
+ENTRYPOINT ["java", "-Xmx384m", "-jar", "app.jar", "--server.port=${PORT:8080}"]
