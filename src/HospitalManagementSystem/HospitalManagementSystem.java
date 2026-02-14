@@ -5,9 +5,11 @@ import java.util.Scanner;
 
 public class HospitalManagementSystem {
 
-    private static final String url = "jdbc:mysql://localhost:3306/hospital";
-    private static final String username = "root";
-    private static final String password = "Butterfly@2025";
+    // Example of how to use these in your Java code
+String url = System.getenv("DB_URL");
+String user = System.getenv("DB_USER");
+String password = System.getenv("DB_PASSWORD");
+Connection conn = DriverManager.getConnection(url, user, password);
 
     public static void main(String[] args) {
 
