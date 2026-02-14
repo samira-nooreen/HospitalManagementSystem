@@ -1,4 +1,3 @@
-
 package HospitalManagementSystem;
 
 import com.sun.net.httpserver.HttpServer;
@@ -17,7 +16,8 @@ public class HospitalManagementSystem {
             server.createContext("/", (exchange) -> {
                 String response = "Hospital Management System is Live!";
                 exchange.sendResponseHeaders(200, response.length());
-                OutputStream os = exchange.getOutputStream();
+                // FIX: Changed getOutputStream() to getResponseBody()
+                OutputStream os = exchange.getResponseBody(); 
                 os.write(response.getBytes());
                 os.close();
             });
@@ -40,14 +40,14 @@ public class HospitalManagementSystem {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             System.out.println("Database Connected!");
 
-            // Initialize your objects
-            // Ensure Patient and Doctor classes are in the same package (HospitalManagementSystem)
+            // Note: Scanner will not be interactive on Render logs, 
+            // but we keep it to prevent immediate exit.
             Patient patient = new Patient(connection, new Scanner(System.in));
             Doctor doctor = new Doctor(connection);
             
             System.out.println("System initialized. Waiting for connections...");
             
-            // This keeps the app running on Render since there's no UI
+            // Keep the main thread alive so the container doesn't stop
             Thread.currentThread().join(); 
 
         } catch (Exception e) {
