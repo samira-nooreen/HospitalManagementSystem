@@ -1,3 +1,6 @@
+
+package HospitalManagementSystem;
+
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 import java.io.OutputStream;
@@ -29,18 +32,22 @@ public class HospitalManagementSystem {
         String username = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
 
+        if (url == null || username == null) {
+            System.err.println("ERROR: Missing DB environment variables (DB_URL, DB_USER, DB_PASSWORD)");
+            return;
+        }
+
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             System.out.println("Database Connected!");
 
-            // Note: Ensure Patient and Doctor classes are also in the root folder without package names
+            // Initialize your objects
+            // Ensure Patient and Doctor classes are in the same package (HospitalManagementSystem)
             Patient patient = new Patient(connection, new Scanner(System.in));
             Doctor doctor = new Doctor(connection);
             
-            // Render logs usually don't support interactive Scanner input well,
-            // but keeping this here so the app doesn't close immediately.
-            System.out.println("System initialized. Waiting for requests...");
+            System.out.println("System initialized. Waiting for connections...");
             
-            // Keep the main thread alive
+            // This keeps the app running on Render since there's no UI
             Thread.currentThread().join(); 
 
         } catch (Exception e) {
